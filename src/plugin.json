@@ -1,0 +1,36 @@
+{
+  "type": "datasource",
+  "name": "conprof-datasource",
+  "id": "conprof-conprof-datasource",
+  "metrics": false,
+  "annotations": true,
+  "info": {
+    "description": "",
+    "author": {
+      "name": "yeya24",
+      "url": ""
+    },
+    "keywords": [],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/grafana/simple-datasource"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/grafana/simple-datasource/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaVersion": "6.5.x",
+    "plugins": []
+  }
+}
