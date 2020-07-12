@@ -2,8 +2,12 @@
   "type": "datasource",
   "name": "conprof-datasource",
   "id": "conprof-conprof-datasource",
-  "metrics": false,
   "annotations": true,
+  "metrics": false,
+  "alerting": false,
+  "logs": false,
+  "streaming": false,
+  "tracing": false,
   "info": {
     "description": "",
     "author": {

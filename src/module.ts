@@ -2,8 +2,10 @@ import { DataSourcePlugin } from '@grafana/data';
 import { DataSource } from './DataSource';
 import { ConfigEditor } from './ConfigEditor';
 import { QueryEditor } from './QueryEditor';
-import { MyQuery, MyDataSourceOptions } from './types';
+import { ConprofQuery, ConprofOptions } from './types';
+import { ConprofAnnotationsQueryCtrl } from './AnnotationsQueryCtrl';
 
-export const plugin = new DataSourcePlugin<DataSource, MyQuery, MyDataSourceOptions>(DataSource)
+export const plugin = new DataSourcePlugin<DataSource, ConprofQuery, ConprofOptions>(DataSource)
   .setConfigEditor(ConfigEditor)
-  .setQueryEditor(QueryEditor);
+  .setQueryEditor(QueryEditor)
+  .setAnnotationQueryCtrl(ConprofAnnotationsQueryCtrl);
