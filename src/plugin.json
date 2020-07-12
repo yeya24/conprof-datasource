@@ -1,18 +1,19 @@
 {
   "type": "datasource",
-  "name": "conprof-datasource",
-  "id": "conprof-conprof-datasource",
+  "name": "Conprof",
+  "id": "conprof",
+
   "annotations": true,
   "metrics": false,
   "alerting": false,
   "logs": false,
   "streaming": false,
   "tracing": false,
+
   "info": {
-    "description": "",
+    "description": "Continuous profiling in for pprof compatible profiles.",
     "author": {
-      "name": "yeya24",
-      "url": ""
+      "name": "yeya24"
     },
     "keywords": [],
     "logos": {
@@ -21,12 +22,16 @@
     },
     "links": [
       {
+        "name": "Learn more",
+        "url": "https://github.com/conprof/conprof"
+      },
+      {
         "name": "Website",
-        "url": "https://github.com/grafana/simple-datasource"
+        "url": "https://github.com/yeya24/conprof-datasource"
       },
       {
         "name": "License",
-        "url": "https://github.com/grafana/simple-datasource/blob/master/LICENSE"
+        "url": "https://github.com/yeya24/conprof-datasource/blob/master/LICENSE"
       }
     ],
     "screenshots": [],
