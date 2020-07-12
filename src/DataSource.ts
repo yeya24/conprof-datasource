@@ -5,10 +5,7 @@ import {
   DataQueryResponse,
   DataSourceApi,
   DataSourceInstanceSettings,
-  MutableDataFrame,
-  FieldType,
   AnnotationEvent,
-  DateTime,
   AnnotationQueryRequest,
 } from '@grafana/data';
 
@@ -18,14 +15,12 @@ import { ConprofQuery, ConprofOptions, defaultQuery, ConprofDataQueryResponse, S
 
 export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
   url: string;
+  defaultUrl: string;
 
   constructor(instanceSettings: DataSourceInstanceSettings<ConprofOptions>) {
     super(instanceSettings);
     this.url = instanceSettings.url!;
-  }
-
-  getPrometheusTime(date: DateTime) {
-    return Math.ceil(date.valueOf());
+    this.defaultUrl = instanceSettings.jsonData.defaultUrl;
   }
 
   _request(url: string, data: Record<string, string> = {}) {
@@ -64,23 +59,7 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
   }
 
   async query(options: DataQueryRequest<ConprofQuery>): Promise<DataQueryResponse> {
-    const { range } = options;
-    const from = range!.from.valueOf();
-    const to = range!.to.valueOf();
-
-    // Return a constant for each query.
-    const data = options.targets.map(target => {
-      const query = defaults(target, defaultQuery);
-      return new MutableDataFrame({
-        refId: query.refId,
-        fields: [
-          { name: 'Time', values: [from, to], type: FieldType.time },
-          // { name: 'Value', values: [query.constant, query.constant], type: FieldType.number },
-        ],
-      });
-    });
-
-    return { data };
+    return Promise.resolve({ data: [] });
   }
 
   async annotationQuery(options: AnnotationQueryRequest<ConprofQuery>): Promise<AnnotationEvent[]> {
@@ -92,8 +71,8 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
     }
 
     const query = defaults(options.annotation, defaultQuery);
-    query.start = this.getPrometheusTime(options.range.from);
-    query.end = this.getPrometheusTime(options.range.to);
+    query.start = options.range.from.valueOf();
+    query.end = options.range.to.valueOf();
     const response: ConprofDataQueryResponse = await this.performTimeSeriesQuery(query);
 
     let events: AnnotationEvent[] = [];
@@ -105,8 +84,9 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
       }
       series.timestamps.forEach((timestamp: number) => {
         events.push({
+          title: `${series.labels['__name__']}`,
           time: timestamp,
-          text: `<a href="${this.url}/pprof/${series.labelsetEncoded}/${timestamp}/">pprof ui</a>`,
+          text: `<a target="_blank" href="${this.defaultUrl}/pprof/${series.labelsetEncoded}/${timestamp}/">pprof UI</a>`,
           tags: tags,
         });
       });
@@ -117,6 +97,8 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
 
   async testDatasource() {
     // Implement a health check for your data source.
+
+    // TODO: use /-/ready endpoint for liveness check
     const result = await this._request('/metrics').catch((err: any) => {
       console.log(err);
     });
