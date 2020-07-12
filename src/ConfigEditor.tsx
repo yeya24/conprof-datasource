@@ -8,18 +8,26 @@ const { FormField } = LegacyForms;
 interface Props extends DataSourcePluginOptionsEditorProps<ConprofOptions> {}
 
 export class ConfigEditor extends PureComponent<Props> {
+  componentDidMount() {
+    const { options } = this.props;
+    options.jsonData.defaultUrl = options.url;
+  }
+
   onURLChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { onOptionsChange, options } = this.props;
-    const jsonData = {
-      ...options.jsonData,
-      defaultUrl: event.target.value,
-    };
-    onOptionsChange({ ...options, jsonData });
+    onOptionsChange({
+      ...options,
+      url: event.target.value,
+      jsonData: {
+        ...options.jsonData,
+        defaultUrl: event.target.value,
+      },
+    });
   };
 
   render() {
     const { options } = this.props;
-    const { jsonData } = options;
+    const { url } = options;
 
     return (
       <div className="gf-form-group">
@@ -29,7 +37,7 @@ export class ConfigEditor extends PureComponent<Props> {
             label="URL"
             labelWidth={11}
             onChange={this.onURLChange}
-            value={jsonData.defaultUrl || ''}
+            value={url || ''}
             tooltip="Specify a complete HTTP URL (for example http://your_server:8080);"
             placeholder="http://localhost:8080"
           />
