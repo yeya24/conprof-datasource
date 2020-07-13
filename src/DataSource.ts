@@ -125,7 +125,11 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
         events.push({
           title: `${series.labels['__name__']}`,
           time: timestamp,
-          text: `<a target="_blank" href="${this.defaultUrl}/pprof/${series.labelsetEncoded}/${timestamp}/">pprof UI</a>`,
+          text: `<div>
+    <a target="_blank" href="${this.defaultUrl}/pprof/${series.labelsetEncoded}/${timestamp}/">pprof UI</a>
+    <a target="_blank" href="${this.defaultUrl}/download/${series.labelsetEncoded}/${timestamp}/">profile Download</a>
+</div>
+`,
           tags: tags,
         });
       });
