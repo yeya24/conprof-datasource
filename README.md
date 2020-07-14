@@ -2,6 +2,8 @@
 
 Visualize Conprof events with Grafana!
 
+![example](https://github.com/yeya24/conprof-datasource/blob/master/assets/example.png)
+
 ## Getting started
 
 ### Use Grafana image with Conprof data source
@@ -54,7 +56,7 @@ docker-compose up -d
 
 Then you can open `localhost:3000` at the browser and find the Conprof data source.
 
-![find data source](assets/find-data-source.png)
+![find data source](https://github.com/yeya24/conprof-datasource/blob/master/assets/find-data-source.png)
 
 Remember that every time the source code changes, you need to restart the Grafana container to load the latest plugin.
 
