@@ -15,7 +15,7 @@
     "author": {
       "name": "yeya24"
     },
-    "keywords": [],
+    "keywords": ["pprof", "profiling"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
@@ -35,8 +35,7 @@
       }
     ],
     "screenshots": [],
-    "version": "1.0.0",
-    "updated": "2020-07-14"
+    "version": "0.1.0"
   },
   "dependencies": {
     "grafanaVersion": "6.5.x",
