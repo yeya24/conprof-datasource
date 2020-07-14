@@ -7,6 +7,7 @@ import {
   DataSourceInstanceSettings,
   AnnotationEvent,
   AnnotationQueryRequest,
+  DataQueryError,
 } from '@grafana/data';
 
 import { getBackendSrv } from '@grafana/runtime';
@@ -41,6 +42,44 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
     return getBackendSrv().datasourceRequest(options);
   }
 
+  handleErrors = (err: any, target: ConprofQuery) => {
+    const error: DataQueryError = {
+      message: (err && err.statusText) || 'Unknown error during query transaction. Please check JS console logs.',
+      refId: target.refId,
+    };
+
+    if (err.data) {
+      if (typeof err.data === 'string') {
+        error.message = err.data;
+      } else if (err.data.error) {
+        error.message = this.safeStringifyValue(err.data.error);
+      }
+    } else if (err.message) {
+      error.message = err.message;
+    } else if (typeof err === 'string') {
+      error.message = err;
+    }
+
+    error.status = err.status;
+    error.statusText = err.statusText;
+
+    return error;
+  };
+
+  safeStringifyValue = (value: any, space?: number) => {
+    if (!value) {
+      return '';
+    }
+
+    try {
+      return JSON.stringify(value, null, space);
+    } catch (error) {
+      console.error(error);
+    }
+
+    return '';
+  };
+
   performTimeSeriesQuery(query: ConprofQuery) {
     if (query.start > query.end) {
       throw { message: 'Invalid time range' };
@@ -54,7 +93,7 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
     };
 
     return this._request(url, data).catch((err: any) => {
-      return err;
+      throw this.handleErrors(err, query);
     });
   }
 
@@ -95,13 +134,13 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
     return events;
   }
 
+  // Implement a health check for your data source.
   async testDatasource() {
-    // Implement a health check for your data source.
-
     // TODO: use /-/ready endpoint for liveness check
-    const result = await this._request('/metrics').catch((err: any) => {
-      console.log(err);
-    });
+    const result = await this._request('/metrics');
+    if (!result) {
+      return { status: 'error', message: 'Cannot connect to Data source' };
+    }
 
     return result.status === 200
       ? { status: 'success', message: 'Data source is working' }

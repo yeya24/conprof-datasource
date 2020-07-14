@@ -1,7 +1,7 @@
 {
   "type": "datasource",
   "name": "Conprof",
-  "id": "conprof",
+  "id": "conprof-datasource",
 
   "annotations": true,
   "metrics": false,
