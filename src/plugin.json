@@ -1,7 +1,7 @@
 {
   "type": "datasource",
   "name": "Conprof",
-  "id": "conprof-datasource",
+  "id": "yeya24-conprof-datasource",
 
   "annotations": true,
   "metrics": false,
@@ -35,7 +35,8 @@
       }
     ],
     "screenshots": [],
-    "version": "0.1.0"
+    "version": "0.1.0",
+    "updated": "%TODAY%"
   },
   "dependencies": {
     "grafanaVersion": "6.5.x",
