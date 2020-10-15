@@ -112,22 +112,27 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
     const query = defaults(options.annotation, defaultQuery);
     query.start = options.range.from.valueOf();
     query.end = options.range.to.valueOf();
-    const response: ConprofDataQueryResponse = await this.performTimeSeriesQuery(query);
+    const res: any = await this.performTimeSeriesQuery(query);
+    const response: ConprofDataQueryResponse = res.data;
 
     let events: AnnotationEvent[] = [];
 
-    response.data.series.map((series: Series) => {
+    response.data.map((series: Series) => {
       let tags: string[] = [];
       for (let key in series.labels) {
         tags.push(`${key}:${series.labels[key]}`);
       }
       series.timestamps.forEach((timestamp: number) => {
+        const flameGraphURL = `${this.defaultUrl}/api/v1/query?report=flamegraph&time=${timestamp}&query=${query.expr}`;
+        const topURL = `${this.defaultUrl}/api/v1/query?report=top&time=${timestamp}&query=${query.expr}`;
         events.push({
           title: `${series.labels['__name__']}`,
           time: timestamp,
           text: `<div>
     <a target="_blank" href="${this.defaultUrl}/pprof/${series.labelsetEncoded}/${timestamp}/">pprof UI</a>
     <a target="_blank" href="${this.defaultUrl}/download/${series.labelsetEncoded}/${timestamp}/">profile Download</a>
+    <a target="_blank" href=${flameGraphURL}>Flamegraph</a>
+    <a target="_blank" href=${topURL}>Top</a>
 </div>
 `,
           tags: tags,

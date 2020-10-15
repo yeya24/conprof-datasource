@@ -16,9 +16,7 @@ export interface Series {
 
 export interface ConprofDataQueryResponse {
   status: string;
-  data: {
-    series: Series[];
-  };
+  data: Series[];
 }
 
 /**
