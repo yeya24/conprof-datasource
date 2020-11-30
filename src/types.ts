@@ -10,7 +10,6 @@ export const defaultQuery: Partial<ConprofQuery> = {};
 
 export interface Series {
   labels: Record<string, string>;
-  labelsetEncoded: string;
   timestamps: number[];
 }
 

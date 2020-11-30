@@ -123,16 +123,20 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
         tags.push(`${key}:${series.labels[key]}`);
       }
       series.timestamps.forEach((timestamp: number) => {
-        const flameGraphURL = `${this.defaultUrl}/api/v1/query?report=flamegraph&time=${timestamp}&query=${query.expr}`;
-        const topURL = `${this.defaultUrl}/api/v1/query?report=top&time=${timestamp}&query=${query.expr}`;
+        const labels = `{${Object.entries(series.labels)
+          .map(([labelName, labelValue]) => `${labelName}="${labelValue}"`)
+          .join(',')}}`;
+        const encodedLabels = btoa(labels);
+
+        // TODO(yeya24): support more APIs when ready
+        // const flameGraphURL = `${this.defaultUrl}/api/v1/query?report=flamegraph&time=${timestamp}&query=${query.expr}`;
+        // const topURL = `${this.defaultUrl}/api/v1/query?report=top&time=${timestamp}&query=${query.expr}`;
         events.push({
           title: `${series.labels['__name__']}`,
           time: timestamp,
           text: `<div>
-    <a target="_blank" href="${this.defaultUrl}/pprof/${series.labelsetEncoded}/${timestamp}/">pprof UI</a>
-    <a target="_blank" href="${this.defaultUrl}/download/${series.labelsetEncoded}/${timestamp}/">profile Download</a>
-    <a target="_blank" href=${flameGraphURL}>Flamegraph</a>
-    <a target="_blank" href=${topURL}>Top</a>
+    <a target="_blank" href="${this.defaultUrl}/pprof/${encodedLabels}/${timestamp}/">pprof UI</a>
+    <a target="_blank" href="${this.defaultUrl}/download/${encodedLabels}/${timestamp}/">profile Download</a>
 </div>
 `,
           tags: tags,
@@ -145,8 +149,7 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
 
   // Implement a health check for your data source.
   async testDatasource() {
-    // TODO: use /-/ready endpoint for liveness check
-    const result = await this._request('/metrics');
+    const result = await this._request('/-/ready');
     if (!result) {
       return { status: 'error', message: 'Cannot connect to Data source' };
     }
