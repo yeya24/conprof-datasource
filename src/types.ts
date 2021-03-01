@@ -21,6 +21,4 @@ export interface ConprofDataQueryResponse {
 /**
  * These are options configured for each DataSource instance
  */
-export interface ConprofOptions extends DataSourceJsonData {
-  defaultUrl: string;
-}
+export interface ConprofOptions extends DataSourceJsonData {}

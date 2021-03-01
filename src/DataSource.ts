@@ -16,12 +16,10 @@ import { ConprofQuery, ConprofOptions, defaultQuery, ConprofDataQueryResponse, S
 
 export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
   url: string;
-  defaultUrl: string;
 
   constructor(instanceSettings: DataSourceInstanceSettings<ConprofOptions>) {
     super(instanceSettings);
     this.url = instanceSettings.url!;
-    this.defaultUrl = instanceSettings.jsonData.defaultUrl;
   }
 
   _request(url: string, data: Record<string, string> = {}) {
@@ -135,8 +133,8 @@ export class DataSource extends DataSourceApi<ConprofQuery, ConprofOptions> {
           title: `${series.labels['__name__']}`,
           time: timestamp,
           text: `<div>
-    <a target="_blank" href="${this.defaultUrl}/pprof/${encodedLabels}/${timestamp}/">pprof UI</a>
-    <a target="_blank" href="${this.defaultUrl}/download/${encodedLabels}/${timestamp}/">profile Download</a>
+    <a target="_blank" href="${this.url}/pprof/${encodedLabels}/${timestamp}/">pprof UI</a>
+    <a target="_blank" href="${this.url}/download/${encodedLabels}/${timestamp}/">profile Download</a>
 </div>
 `,
           tags: tags,
